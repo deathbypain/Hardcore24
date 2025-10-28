@@ -37,7 +37,7 @@ public class playerManager implements CommandExecutor {
         if(args.length>0){
 
             if(args[OPERATION].toUpperCase().contains(REMOVE)){
-                if(args.length<3){
+                if(args.length<2){
                     commandSender.sendMessage(ChatColor.RED + "Argument error! More arguments are needed");
                     return true;
                 }
@@ -111,9 +111,27 @@ public class playerManager implements CommandExecutor {
 
             }
             if(args[OPERATION].toUpperCase().contains(LIST)){
-                System.out.println(Hardcore24.deadPlayers);
-                //TODO fix
+               String res =  ChatColor.BLUE + "Currently banned players:\n";
+               for(OfflinePlayer p : Hardcore24.plugin.getServer().getOfflinePlayers()){
+                   try{
+                       if(Hardcore24.deadPlayers.containsKey(p.getUniqueId())){
+                           PlayerDeathData d = Hardcore24.deadPlayers.get(p.getUniqueId());
+                           res+= ChatColor.BOLD + "" +ChatColor.DARK_RED + "  " + p.getName() + "\n";
+                           LocalDateTime unbanTime = LocalDateTime.of(d.deathYear, d.deathMonth, d.deathDayOfMonth, d.deathHour, d.deathMinute, d.deathSecond);
+                           res+= ChatColor.RED + "  " + "  unban-time: " + unbanTime.toString() + "\n";
+                           res+= ChatColor.RED + "  " + "  death-world: " + d.world + "\n";
+                           res+="\n";
 
+
+                       }
+
+                   }catch(NullPointerException ex){
+
+                   }
+               }
+
+
+               commandSender.sendMessage(res);
             }
 
 

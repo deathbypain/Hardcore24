@@ -51,7 +51,7 @@ public class playerManagerTabComplete implements TabCompleter {
                         List<String> list = new ArrayList<>();
                         if (commandSender.isOp() || commandSender.hasPermission("hardcore.manage.players")) {
 
-                            if(args[0].toUpperCase().contains("ban")) {
+                            if(args[0].equalsIgnoreCase("ban")) {
                                 for (World w : Hardcore24.plugin.getServer().getWorlds()) {
                                     list.add(w.getName());
                                 }
