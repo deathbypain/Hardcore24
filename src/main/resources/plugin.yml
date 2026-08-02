@@ -1,9 +1,9 @@
 name: Hardcore24
-version: '2.0'
+version: '${project.version}'
 main: uk.co.shadowtrilogy.hardcore24.Hardcore24
 api-version: '1.21'
 load: STARTUP
-authors: [BlueNightFury46]
+authors: [BlueNightFury46, deathbypain]
 description: a 24 hour (default) hardcore death timeout plugin!
 website: bluenightfury46.dev
 commands:
