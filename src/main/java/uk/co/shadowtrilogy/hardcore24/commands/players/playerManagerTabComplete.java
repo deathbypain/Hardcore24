@@ -1,13 +1,12 @@
 package uk.co.shadowtrilogy.hardcore24.commands.players;
 
-import org.bukkit.World;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import uk.co.shadowtrilogy.hardcore24.Hardcore24;
-import uk.co.shadowtrilogy.hardcore24.json.groups.groupdata;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,9 +25,6 @@ public class playerManagerTabComplete implements TabCompleter {
                             list.add("unban");
                             list.add("list");
 
-
-
-
                             return list;
 
                         }
@@ -36,10 +32,15 @@ public class playerManagerTabComplete implements TabCompleter {
                     }
 
                     case 2: {
-                        //List<String> list = new ArrayList<>();
-                        if (commandSender.isOp() || commandSender.hasPermission("hardcore.manage.groups")) {
+                        List<String> list = new ArrayList<>();
+                        if (commandSender.isOp() || commandSender.hasPermission("hardcore.manage.players")) {
+                            for (OfflinePlayer player : Hardcore24.plugin.getServer().getOfflinePlayers()) {
+                                if (player.getName() != null) {
+                                    list.add(player.getName());
+                                }
+                            }
 
-                          return null;
+                            return list;
 
 
                         }
@@ -51,9 +52,9 @@ public class playerManagerTabComplete implements TabCompleter {
                         List<String> list = new ArrayList<>();
                         if (commandSender.isOp() || commandSender.hasPermission("hardcore.manage.players")) {
 
-                            if(args[0].toUpperCase().contains("ban")) {
-                                for (World w : Hardcore24.plugin.getServer().getWorlds()) {
-                                    list.add(w.getName());
+                            if (args[0].equalsIgnoreCase("ban")) {
+                                for (String worldName : Hardcore24.worlds.keySet()) {
+                                    list.add(worldName);
                                 }
                             }
 
@@ -66,12 +67,15 @@ public class playerManagerTabComplete implements TabCompleter {
 
 
                     }
+
+                    default:
+                        return new ArrayList<>();
                 }
 
             }
         }
 
 
-        return null;
+        return new ArrayList<>();
     }
 }
