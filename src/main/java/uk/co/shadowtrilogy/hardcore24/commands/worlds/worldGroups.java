@@ -264,11 +264,15 @@ public class worldGroups implements CommandExecutor {
 
 
     boolean groupAlreadyExists(String group){
-        for(groupdata data : Hardcore24.groups){
-            if(data.group_name.equalsIgnoreCase(group)){
-                return true;
+
+        try {
+
+            for (groupdata data : Hardcore24.groups) {
+                if (data.group_name.equalsIgnoreCase(group)) {
+                    return true;
+                }
             }
-        }
+        }catch(NullPointerException ex){}
         return false;
     }
 }
