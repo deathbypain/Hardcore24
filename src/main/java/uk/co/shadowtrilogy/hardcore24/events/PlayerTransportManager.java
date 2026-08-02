@@ -22,27 +22,34 @@ public class PlayerTransportManager implements Listener {
 
 
                 PlayerDeathData data = Hardcore24.deadPlayers.get(ev.getPlayer().getUniqueId());
+                String playerName = ev.getPlayer().getName();
 
                 LocalDateTime deathTime = LocalDateTime.of(data.deathYear, data.deathMonth, data.deathDayOfMonth, data.deathHour, data.deathMinute, data.deathSecond);
 
                 String group = Hardcore24.worlds.get(data.world);
 
-                System.out.println(deathTime.isAfter(LocalDateTime.now()));
-                System.out.println(deathTime.isBefore(LocalDateTime.now()));
+                LocalDateTime now = LocalDateTime.now();
+                boolean banElapsed = now.isAfter(deathTime);
+                Hardcore24.plugin.getLogger().info("Teleport ban-time check for " + playerName + ": expires=" + deathTime + ", now=" + now + ", elapsed=" + banElapsed);
 
 
-                if(LocalDateTime.now().isAfter(deathTime)){
+                if(banElapsed){
 
                     Hardcore24.deadPlayers.remove(ev.getPlayer().getUniqueId());
                     ev.getPlayer().sendMessage(ChatColor.RED + "" + ChatColor.ITALIC + "Congratulations, you have been unbanned from hardcore... Good luck");
 
 
                 } else {
-                    if(doesGroupContainWorld(group, data.world)) {
-                        ev.setCancelled(true);
+                    String destinationWorld = ev.getTo() != null && ev.getTo().getWorld() != null
+                    ? ev.getTo().getWorld().getName() : null;
 
-                        ev.getPlayer().sendMessage(ChatColor.RED + "" + ChatColor.ITALIC + "You died in hardcore... You will be unbanned at " + deathTime.toString());
+                    boolean destinationInBannedGroup = destinationWorld != null && doesGroupContainWorld(group, destinationWorld);
+                    Hardcore24.plugin.getLogger().info("Teleport destination group check for " + playerName + ": destination=" + destinationWorld + ", bannedGroup=" + group + ", inBannedGroup=" + destinationInBannedGroup);
 
+                    if (destinationInBannedGroup) {
+                       ev.setCancelled(true);
+                        ev.getPlayer().sendMessage(ChatColor.RED + "" + ChatColor.ITALIC
+                            + "You died in hardcore... You will be unbanned at " + deathTime);
                     }
 
                 }
