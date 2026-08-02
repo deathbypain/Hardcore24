@@ -38,7 +38,8 @@ public class playerManager implements CommandExecutor {
         if(args.length>0){
 
             if(args[OPERATION].toUpperCase().contains(REMOVE)){
-                if(args.length != 2){
+              //Reverted back to > 2 so that irrelevant arguments are 
+                if(args.length > 2){
                     commandSender.sendMessage(ChatColor.RED + "Argument error! Please use: /player unban <player>");
                     return true;
                 }
@@ -130,8 +131,13 @@ public class playerManager implements CommandExecutor {
                         if(groupName==null){
                             groupName = "(unmapped for world \"" + data.world + "\")";
                         }
+                      String res = "";
+                      res+=ChatColor.BLUE + "- " + ChatColor.LIGHT_PURPLE + listedName + ChatColor.BLUE;
+                      res+=" | Group: " + ChatColor.GREEN + groupName + ChatColor.BLUE;
+                      res+= " | Unban: " + ChatColor.GREEN + unbanTime + ChatColor.BLUE;
+                      res+= " | Deathworld: " + ChatColor.GREEN + data.world + ChatColor.BLUE;
 
-                        commandSender.sendMessage(ChatColor.BLUE + "- " + ChatColor.LIGHT_PURPLE + listedName + ChatColor.BLUE + " | Group: " + ChatColor.GREEN + groupName + ChatColor.BLUE + " | Unban: " + ChatColor.GREEN + unbanTime);
+                        commandSender.sendMessage(res);
                     }
                     return true;
                 }

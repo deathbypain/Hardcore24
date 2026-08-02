@@ -33,7 +33,8 @@ public class playerManagerTabComplete implements TabCompleter {
 
                     case 2: {
                         List<String> list = new ArrayList<>();
-                        if (commandSender.isOp() || commandSender.hasPermission("hardcore.manage.players")) {
+                      //changed for interoperability with past versions
+                        if (commandSender.isOp() || commandSender.hasPermission("hardcore.manage.groups")) {
                             for (OfflinePlayer player : Hardcore24.plugin.getServer().getOfflinePlayers()) {
                                 if (player.getName() != null) {
                                     list.add(player.getName());
