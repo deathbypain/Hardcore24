@@ -2,6 +2,7 @@ package uk.co.shadowtrilogy.hardcore24.commands.players;
 
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -69,6 +70,7 @@ public class playerManager implements CommandExecutor {
 
                 Hardcore24.deadPlayers.remove(player);
                 commandSender.sendMessage(ChatColor.BLUE + "Successfully unbanned player \"" + ChatColor.LIGHT_PURPLE + args[PLAYER] + ChatColor.BLUE + "\" from all hardcore bans.");
+                notifyOrQueuePlayer(player, ChatColor.GREEN + "You have been unbanned from hardcore by a server admin.");
 
 
                return true;
@@ -97,8 +99,11 @@ public class playerManager implements CommandExecutor {
                     if(player==null){
                         throw new NullPointerException();
                     }
-                        Hardcore24.deadPlayers.put(player, new PlayerDeathData(args[WORLD], LocalDateTime.now()));
+                    Hardcore24.deadPlayers.put(player, new PlayerDeathData(args[WORLD], LocalDateTime.now()));
+                    PlayerDeathData newBanData = Hardcore24.deadPlayers.get(player);
+                    LocalDateTime unbanTime = LocalDateTime.of(newBanData.deathYear, newBanData.deathMonth, newBanData.deathDayOfMonth, newBanData.deathHour, newBanData.deathMinute, newBanData.deathSecond);
                     commandSender.sendMessage(ChatColor.BLUE + "Successfully banned player \"" + ChatColor.LIGHT_PURPLE + args[PLAYER] +  ChatColor.BLUE + "\"  from hardcore world \"" + ChatColor.GREEN + args[WORLD] + ChatColor.BLUE + "\"");
+                    notifyOrQueuePlayer(player, ChatColor.RED + "" + ChatColor.ITALIC + "You have been banned from hardcore in world \"" + args[WORLD] + "\" by a server admin. Unban time: " + unbanTime);
 
 
                 } catch (NullPointerException ex){
@@ -237,5 +242,17 @@ public class playerManager implements CommandExecutor {
             return false;
         }
         return Hardcore24.worlds.containsKey(worldName);
+    }
+
+    void notifyOrQueuePlayer(UUID playerId, String message){
+        Player target = Hardcore24.plugin.getServer().getPlayer(playerId);
+        if(target != null && target.isOnline()){
+            Hardcore24.pendingPlayerNotifications.remove(playerId);
+            target.sendMessage(message);
+            return;
+        }
+
+        // Coalesce offline notifications by UUID so only latest state is delivered.
+        Hardcore24.pendingPlayerNotifications.put(playerId, message);
     }
 }
