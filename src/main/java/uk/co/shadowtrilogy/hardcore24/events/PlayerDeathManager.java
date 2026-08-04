@@ -35,6 +35,7 @@ public class PlayerDeathManager implements Listener {
 
                     //TODO fix timezones probably
                     Hardcore24.deadPlayers.put(ev.getPlayer().getUniqueId(), new PlayerDeathData(ev.getPlayer().getWorld(), LocalDateTime.now()));
+                    sendDeathBanNotification(ev.getPlayer());
 
                     try {
                         if (Hardcore24.DROP_ENDERCHEST && !ev.getKeepInventory()) {
@@ -62,6 +63,7 @@ public class PlayerDeathManager implements Listener {
 
                 //TODO fix timezones probably
                 Hardcore24.deadPlayers.put(ev.getPlayer().getUniqueId(), new PlayerDeathData(ev.getPlayer().getWorld(), LocalDateTime.now()));
+                sendDeathBanNotification(ev.getPlayer());
 
                 try {
                     if (Hardcore24.DROP_ENDERCHEST && !ev.getKeepInventory()) {
@@ -141,5 +143,16 @@ public class PlayerDeathManager implements Listener {
             }
         }
 
+    }
+
+    private void sendDeathBanNotification(Player player){
+        PlayerDeathData data = Hardcore24.deadPlayers.get(player.getUniqueId());
+        if(data == null){
+            return;
+        }
+
+        Hardcore24.pendingPlayerNotifications.remove(player.getUniqueId());
+        LocalDateTime unbanTime = LocalDateTime.of(data.deathYear, data.deathMonth, data.deathDayOfMonth, data.deathHour, data.deathMinute, data.deathSecond);
+        player.sendMessage(ChatColor.RED + "" + ChatColor.ITALIC + "You are now banned from hardcore. Unban time: " + unbanTime);
     }
 }
