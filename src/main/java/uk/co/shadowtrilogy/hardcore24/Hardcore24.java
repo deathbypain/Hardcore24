@@ -22,6 +22,7 @@ import uk.co.shadowtrilogy.hardcore24.json.world_group.worldgroupdataContainer;
 
 
 import java.io.File;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -31,6 +32,7 @@ public final class Hardcore24 extends JavaPlugin {
 
     @NotNull public static HashMap<UUID, PlayerDeathData> deadPlayers = new HashMap<>();
     @NotNull public static HashMap<UUID, String> pendingPlayerNotifications = new HashMap<>();
+    @NotNull public static HashMap<UUID, LocalDateTime> activeEjectionDeadlines = new HashMap<>();
 
     @NotNull public static HashMap<String, String> worlds = new HashMap<>();
     @NotNull public static Set<groupdata> groups = new HashSet<groupdata>();
@@ -69,7 +71,7 @@ public final class Hardcore24 extends JavaPlugin {
 
 
         getServer().getPluginManager().registerEvents(new PlayerDeathManager(), this);
-    getServer().getPluginManager().registerEvents(new PlayerNotificationManager(), this);
+        getServer().getPluginManager().registerEvents(new PlayerNotificationManager(), this);
         getServer().getPluginManager().registerEvents(new PlayerTransportManager(), this);
 
 
@@ -115,7 +117,7 @@ public final class Hardcore24 extends JavaPlugin {
 
 
         final String deadPlayers_filename = "players.json";
-    final String pendingNotifications_filename = "pending_notifications.json";
+        final String pendingNotifications_filename = "pending_notifications.json";
         final String worlds_filename = "worlds.json";
         final String groups_filename = "groups.json";
 
@@ -145,7 +147,7 @@ public final class Hardcore24 extends JavaPlugin {
 
         deadPlayers = Player_dataJSON.jsonInit(death_data, deadPlayers).players;
 
-    pendingPlayerNotifications = Player_notificationJSON.jsonInit(notification_data, pendingPlayerNotifications).notifications;
+        pendingPlayerNotifications = Player_notificationJSON.jsonInit(notification_data, pendingPlayerNotifications).notifications;
 
         worlds = World_groupJSON.jsonInit(world_data, worlds).world_groups;
 
