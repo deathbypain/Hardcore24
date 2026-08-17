@@ -10,6 +10,8 @@ import uk.co.shadowtrilogy.hardcore24.json.groups.json_location;
 public class GroupWorldUtils {
 
     // Checks if a group contains a specified world.
+    // TODO: PlayerDeathManager.respawn could probably use this method as well?
+
     public static boolean groupContainsWorld(String groupName, String worldName){
         for(groupdata group : Hardcore24.groups){
             if(group.group_name != null && group.group_name.equalsIgnoreCase(groupName) && group.worlds != null){
@@ -23,9 +25,8 @@ public class GroupWorldUtils {
         return false;
     }
 
-    /* Returns the respawn location for a specific group with inbuilt null checks.
-       TODO: PlayerDeathManager.respawn could probably use this method as well? */
-
+    // Returns the respawn location for a specific group with inbuilt null checks.
+    
     public static Location getGroupRespawnLocation(String groupName){
         for(groupdata group : Hardcore24.groups){
             if(group.group_name != null && group.group_name.equalsIgnoreCase(groupName)){
