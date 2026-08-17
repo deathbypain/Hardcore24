@@ -25,6 +25,13 @@ public class PlayerDeathManager implements Listener {
 
 
         if(!ev.getPlayer().hasPermission("hardcore.immortal")){
+            // If the death occurred in a world that is not tracked by Hardcore24,
+            // do not apply a ban and simply allow default death behavior to proceed
+            String deathWorldName = ev.getPlayer().getWorld().getName();
+            if(!Hardcore24.worlds.containsKey(deathWorldName)){
+                return;
+            }
+
             try {
                 if (!Hardcore24.deadPlayers.containsKey(ev.getPlayer().getUniqueId())) {
 
